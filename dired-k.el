@@ -148,6 +148,9 @@
          (size-face (dired-k--date-face (float-time modified-time))))
     (overlay-put ov 'face size-face)))
 
+(defsubst dired-k--size-to-regexp (size)
+  (concat "\\_<" (number-to-string size) "\\_>"))
+
 (defun dired-k--highlight-by-file-attribyte ()
   (save-excursion
     (goto-char (point-min))
@@ -157,7 +160,8 @@
              (modified-time (nth 5 file-attrs))
              (file-size (nth 7 file-attrs))
              (date-end-point (1- (point))))
-        (when (and file-size (search-backward (number-to-string file-size) nil t))
+        (when (and file-size
+                   (re-search-backward (dired-k--size-to-regexp file-size) nil t))
           (let ((start (match-beginning 0))
                 (end (match-end 0)))
             (dired-k--highlight-by-size file-size start end)
