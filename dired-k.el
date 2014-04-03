@@ -165,7 +165,10 @@
           (let ((start (match-beginning 0))
                 (end (match-end 0)))
             (dired-k--highlight-by-size file-size start end)
-            (dired-k--highlight-by-date modified-time (+ end 2) date-end-point)))
+            (goto-char end)
+            (skip-chars-forward "^ \t")
+            (skip-chars-forward " \t")
+            (dired-k--highlight-by-date modified-time (point) date-end-point)))
         (dired-next-line 1)))))
 
 (defun dired-k--inside-git-repository-p ()
