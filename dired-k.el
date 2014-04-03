@@ -51,6 +51,11 @@
   "Face of untracked file in git repository"
   :group 'dired-k)
 
+(defface dired-k-directory
+  '((t (:foreground "blue")))
+  "Face of directory"
+  :group 'dired-k)
+
 (defcustom dired-k-size-colors
   '((1024 . "chartreuse4") (2048 . "chartreuse3") (3072 . "chartreuse2")
     (5120 . "chartreuse1") (10240 . "yellow3") (20480 . "yellow2") (40960 . "yellow")
@@ -161,6 +166,13 @@
 (defsubst dired-k--size-to-regexp (size)
   (concat "\\_<" (number-to-string size) "\\_>"))
 
+(defun dired-k--highlight-directory ()
+  (save-excursion
+    (back-to-indentation)
+    (when (eq (char-after) ?d)
+      (let ((ov (make-overlay (point) (1+ (point)))))
+        (overlay-put ov 'face 'dired-k-directory)))))
+
 (defun dired-k--highlight-by-file-attribyte ()
   (save-excursion
     (goto-char (point-min))
@@ -170,6 +182,7 @@
              (modified-time (nth 5 file-attrs))
              (file-size (nth 7 file-attrs))
              (date-end-point (1- (point))))
+        (dired-k--highlight-directory)
         (when (and file-size
                    (re-search-backward (dired-k--size-to-regexp file-size) nil t))
           (let ((start (match-beginning 0))
