@@ -203,13 +203,17 @@
           (string= "true" (buffer-substring-no-properties
                            (point) (line-end-position))))))))
 
+(defun dired-k--highlight (buf)
+  (with-current-buffer buf
+    (save-excursion
+      (dired-k--highlight-by-file-attribyte)
+      (when (dired-k--inside-git-repository-p)
+        (dired-k--highlight-git-information)))))
+
 ;;;###autoload
 (defun dired-k ()
   (interactive)
-  (save-excursion
-    (dired-k--highlight-by-file-attribyte)
-    (when (dired-k--inside-git-repository-p)
-      (dired-k--highlight-git-information))))
+  (run-with-idle-timer 0 nil 'dired-k--highlight (current-buffer)))
 
 (provide 'dired-k)
 
