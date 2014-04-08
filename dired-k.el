@@ -61,6 +61,8 @@
     (5120 . "chartreuse1") (10240 . "yellow3") (20480 . "yellow2") (40960 . "yellow")
     (102400 . "orange3") (262144 . "orange2") (524288 . "orange"))
   "assoc of file size and color"
+  :type '(repeat (cons (integer :tag "File size")
+                       (string :tag "Color")))
   :group 'dired-k)
 
 (defcustom dired-k-date-colors
@@ -68,6 +70,8 @@
     (86400 . "grey70") (604800 . "grey40") (2419200 . "grey40")
     (15724800 . "grey30") (31449600 . "grey25") (62899200 . "grey10"))
   "assoc of file modified time and color"
+  :type '(repeat (cons (integer :tag "Elapsed seconds from last modified")
+                       (string :tag "Color")))
   :group 'dired-k)
 
 (defsubst dired-k--git-status-color (stat)
