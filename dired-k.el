@@ -205,6 +205,7 @@
 
 (defun dired-k--highlight (buf)
   (with-current-buffer buf
+    (revert-buffer nil t)
     (save-excursion
       (dired-k--highlight-by-file-attribyte)
       (when (dired-k--inside-git-repository-p)
