@@ -1,4 +1,4 @@
-;;; dired-k.el --- highlighting dired line like k.sh
+;;; dired-k.el --- highlight dired buffer by file size, modified time, git status
 
 ;; Copyright (C) 2014 by Syohei YOSHIDA
 
@@ -21,6 +21,15 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; This package provides highlighting dired buffer like k.sh which is
+;; zsh script.
+;;
+;; Example usage:
+;;
+;;   (require 'dired-k)
+;;   (define-key dired-mode-map (kbd "K") 'dired-k)
+;;
 
 ;;; Code:
 
