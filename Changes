@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.03 2014/04/09 syohex
+    - Fix invalid highlighting where is not repository top
+
 Revision 0.02 2014/04/09 syohex
     - Fix invalid variable use
     - Add function documentation
