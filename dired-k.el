@@ -103,16 +103,22 @@
         ((eq new-status 'added) 'added)
         (t 'normal)))
 
-(defun dired-k--parse-git-status ()
+(defun dired-k--child-directory (path)
+  (let ((regexp (concat default-directory "\\([^/]+\\)")))
+    (when (string-match regexp path)
+      (concat default-directory (match-string 1 path)))))
+
+(defun dired-k--parse-git-status (root)
   (goto-char (point-min))
   (let ((files-status (make-hash-table :test 'equal)))
     (while (not (eobp))
       (let* ((line (buffer-substring-no-properties
                     (line-beginning-position) (line-end-position)))
              (status (dired-k--decide-status (substring line 0 2)))
-             (file (substring line 3)))
-        (if (string-match "\\`\\(.*+?\\)/" file)
-            (let* ((subdir (match-string 1 file))
+             (file (substring line 3))
+             (full-path (concat root file)))
+        (if (file-directory-p full-path)
+            (let* ((subdir (dired-k--child-directory full-path))
                    (cur-status (gethash subdir files-status)))
               (puthash subdir (dired-k--subdir-status cur-status status)
                        files-status))
@@ -120,12 +126,12 @@
       (forward-line 1))
     files-status))
 
-(defun dired-k--collect-git-status ()
+(defun dired-k--collect-git-status (root)
   (let ((cmd "git status --porcelain --ignored --untracked-files=normal"))
     (with-temp-buffer
       (unless (zerop (call-process-shell-command cmd nil t))
         (error "Failed: %s" cmd))
-      (dired-k--parse-git-status))))
+      (dired-k--parse-git-status root))))
 
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
@@ -139,16 +145,17 @@
         (overlay-put ov 'display (propertize "|" 'face stat-face))))))
 
 (defun dired-k--highlight-git-information ()
-  (let ((stats (dired-k--collect-git-status))
-        (root (dired-k--root-directory)))
-    (save-excursion
-      (goto-char (point-min))
-      (dired-next-line 2)
-      (while (not (eobp))
-        (let ((filename (dired-get-filename nil t)))
-          (when filename
-            (dired-k--highlight-line root filename stats)))
-        (dired-next-line 1)))))
+  (let ((root (dired-k--root-directory)))
+    (when root
+      (let ((stats (dired-k--collect-git-status root)))
+        (save-excursion
+          (goto-char (point-min))
+          (dired-next-line 2)
+          (while (not (eobp))
+            (let ((filename (dired-get-filename nil t)))
+              (when filename
+                (dired-k--highlight-line root filename stats)))
+            (dired-next-line 1)))))))
 
 (defsubst dired-k--size-face (size)
   (cl-loop for (border . color) in dired-k-size-colors
