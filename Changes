@@ -1,4 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.02 2014/04/09 syohex
+    - Fix invalid variable use
+    - Add function documentation
+
 Revision 0.01 2014/04/09 syohex
     - Initial release
