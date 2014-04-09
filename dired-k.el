@@ -104,10 +104,14 @@
         ((not current-status) new-status)
         (t 'normal)))
 
-(defun dired-k--child-directory (path)
-  (let ((regexp (concat default-directory "\\([^/]+\\)")))
+(defun dired-k--is-in-child-directory (here path)
+  (let ((relpath (file-relative-name path here)))
+    (string-match-p "/" relpath)))
+
+(defun dired-k--child-directory (here path)
+  (let ((regexp (concat here "\\([^/]+\\)")))
     (when (string-match regexp path)
-      (concat default-directory (match-string 1 path)))))
+      (concat here (match-string 1 path)))))
 
 (defun dired-k--parse-git-status (root)
   (goto-char (point-min))
@@ -117,13 +121,14 @@
                     (line-beginning-position) (line-end-position)))
              (status (dired-k--decide-status (substring line 0 2)))
              (file (substring line 3))
+             (here (expand-file-name default-directory))
              (full-path (concat root file)))
-        (if (file-directory-p full-path)
-            (let* ((subdir (dired-k--child-directory full-path))
+        (if (dired-k--is-in-child-directory here full-path)
+            (let* ((subdir (dired-k--child-directory here full-path))
                    (cur-status (gethash subdir files-status)))
               (puthash subdir (dired-k--subdir-status cur-status status)
                        files-status))
-          (puthash file status files-status)))
+          (puthash full-path status files-status)))
       (forward-line 1))
     files-status))
 
@@ -137,9 +142,8 @@
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
 
-(defun dired-k--highlight-line (root file stats)
-  (let* ((relpath (file-relative-name file root))
-         (stat (gethash relpath stats 'normal)))
+(defun dired-k--highlight-line (file stats)
+  (let ((stat (gethash file stats 'normal)))
     (unless (and (file-directory-p file) (eq stat 'normal))
       (let ((ov (make-overlay (1- (point)) (point)))
             (stat-face (dired-k--git-status-color stat)))
@@ -155,7 +159,7 @@
           (while (not (eobp))
             (let ((filename (dired-get-filename nil t)))
               (when filename
-                (dired-k--highlight-line root filename stats)))
+                (dired-k--highlight-line filename stats)))
             (dired-next-line 1)))))))
 
 (defsubst dired-k--size-face (size)
