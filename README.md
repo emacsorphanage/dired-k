@@ -10,6 +10,11 @@
 ![dired-k](image/dired-k.png)
 
 
+## Installation
+
+You can install `dired-k` from [MELPA](http://melpa.milkbox.net/) with package.el.
+
+
 ## Commands
 
 ### `dired-k`
