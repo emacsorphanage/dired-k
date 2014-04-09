@@ -226,6 +226,8 @@
 
 ;;;###autoload
 (defun dired-k ()
+  "Highlighting dired buffer by file size, last modified time, and git status.
+This is inspired by `k' zsh script"
   (interactive)
   (run-with-idle-timer 0 nil 'dired-k--highlight (current-buffer)))
 
