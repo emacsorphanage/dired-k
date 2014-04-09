@@ -133,7 +133,7 @@
 (defun dired-k--highlight-line (root file stats)
   (let* ((relpath (file-relative-name file root))
          (stat (gethash relpath stats 'normal)))
-    (unless (and (file-directory-p filename) (eq stat 'normal))
+    (unless (and (file-directory-p file) (eq stat 'normal))
       (let ((ov (make-overlay (1- (point)) (point)))
             (stat-face (dired-k--git-status-color stat)))
         (overlay-put ov 'display (propertize "|" 'face stat-face))))))
