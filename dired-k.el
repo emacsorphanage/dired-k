@@ -101,6 +101,7 @@
 (defsubst dired-k--subdir-status (current-status new-status)
   (cond ((eq current-status 'modified) 'modified)
         ((eq new-status 'added) 'added)
+        ((not current-status) new-status)
         (t 'normal)))
 
 (defun dired-k--child-directory (path)
