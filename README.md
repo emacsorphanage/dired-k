@@ -1,4 +1,4 @@
-# dired-k.el
+# dired-k.el [![Build Status](https://travis-ci.org/syohex/emacs-dired-k.png)](https://travis-ci.org/syohex/emacs-dired-k)
 
 `dired-k.el` highlights dired buffer like [k](https://github.com/supercrabtree/k).
 
