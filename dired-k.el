@@ -1,11 +1,11 @@
-;;; dired-k.el --- highlight dired buffer by file size, modified time, git status
+;;; dired-k.el --- highlight dired buffer by file size, modified time, git status  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-dired-k
 ;; Version: 0.03
-;; Package-Requires: ((cl-lib "0.5"))
+;; Package-Requires: ((cl-lib "0.5") (emacs "24"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -113,31 +113,35 @@
     (when (string-match regexp path)
       (concat here (match-string 1 path)))))
 
-(defun dired-k--parse-git-status (root)
-  (goto-char (point-min))
-  (let ((files-status (make-hash-table :test 'equal)))
-    (while (not (eobp))
-      (let* ((line (buffer-substring-no-properties
-                    (line-beginning-position) (line-end-position)))
-             (status (dired-k--decide-status (substring line 0 2)))
-             (file (substring line 3))
-             (here (expand-file-name default-directory))
-             (full-path (concat root file)))
-        (if (dired-k--is-in-child-directory here full-path)
-            (let* ((subdir (dired-k--child-directory here full-path))
-                   (cur-status (gethash subdir files-status)))
-              (puthash subdir (dired-k--subdir-status cur-status status)
-                       files-status))
-          (puthash full-path status files-status)))
-      (forward-line 1))
-    files-status))
+(defun dired-k--parse-git-status (root proc)
+  (with-current-buffer (process-buffer proc)
+    (goto-char (point-min))
+    (let ((files-status (make-hash-table :test 'equal)))
+      (while (not (eobp))
+        (let* ((line (buffer-substring-no-properties
+                      (line-beginning-position) (line-end-position)))
+               (status (dired-k--decide-status (substring line 0 2)))
+               (file (substring line 3))
+               (here (expand-file-name default-directory))
+               (full-path (concat root file)))
+          (if (dired-k--is-in-child-directory here full-path)
+              (let* ((subdir (dired-k--child-directory here full-path))
+                     (cur-status (gethash subdir files-status)))
+                (puthash subdir (dired-k--subdir-status cur-status status)
+                         files-status))
+            (puthash full-path status files-status)))
+        (forward-line 1))
+      files-status)))
 
-(defun dired-k--collect-git-status (root)
-  (let ((cmd "git status --porcelain --ignored --untracked-files=normal"))
-    (with-temp-buffer
-      (unless (zerop (call-process-shell-command cmd nil t))
-        (error "Failed: %s" cmd))
-      (dired-k--parse-git-status root))))
+(defun dired-k--start-git-status (root curbuf callback)
+  (let* ((cmd "git status --porcelain --ignored --untracked-files=normal")
+         (buf (get-buffer-create "*dired-k*")))
+    (set-process-sentinel
+     (start-process-shell-command "dired-k-git-status" buf cmd)
+     (lambda (proc _event)
+       (when (eq (process-status proc) 'exit)
+         (let ((stats (dired-k--parse-git-status root proc)))
+           (funcall callback stats curbuf)))))))
 
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
@@ -149,18 +153,16 @@
             (stat-face (dired-k--git-status-color stat)))
         (overlay-put ov 'display (propertize "|" 'face stat-face))))))
 
-(defun dired-k--highlight-git-information ()
-  (let ((root (dired-k--root-directory)))
-    (when root
-      (let ((stats (dired-k--collect-git-status root)))
-        (save-excursion
-          (goto-char (point-min))
-          (dired-next-line 2)
-          (while (not (eobp))
-            (let ((filename (dired-get-filename nil t)))
-              (when filename
-                (dired-k--highlight-line filename stats)))
-            (dired-next-line 1)))))))
+(defun dired-k--highlight-git-information (stats buf)
+  (with-current-buffer buf
+    (save-excursion
+      (goto-char (point-min))
+      (dired-next-line 2)
+      (while (not (eobp))
+        (let ((filename (dired-get-filename nil t)))
+          (when filename
+            (dired-k--highlight-line filename stats)))
+        (dired-next-line 1)))))
 
 (defsubst dired-k--size-face (size)
   (cl-loop for (border . color) in dired-k-size-colors
@@ -234,14 +236,16 @@
     (save-excursion
       (dired-k--highlight-by-file-attribyte)
       (when (dired-k--inside-git-repository-p)
-        (dired-k--highlight-git-information)))))
+        (let ((root (dired-k--root-directory)))
+          (when root
+            (dired-k--start-git-status root buf 'dired-k--highlight-git-information)))))))
 
 ;;;###autoload
 (defun dired-k ()
   "Highlighting dired buffer by file size, last modified time, and git status.
 This is inspired by `k' zsh script"
   (interactive)
-  (run-with-idle-timer 0 nil 'dired-k--highlight (current-buffer)))
+  (dired-k--highlight (current-buffer)))
 
 (provide 'dired-k)
 
