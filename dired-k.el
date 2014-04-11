@@ -133,9 +133,14 @@
         (forward-line 1))
       files-status)))
 
+(defun dired-k--process-buffer ()
+  (when (buffer-live-p (get-buffer "*dired-k*"))
+    (kill-buffer (get-buffer "*dired-k*")))
+  (get-buffer-create "*dired-k*"))
+
 (defun dired-k--start-git-status (root curbuf callback)
-  (let* ((cmd "git status --porcelain --ignored --untracked-files=normal")
-         (buf (get-buffer-create "*dired-k*")))
+  (let* ((cmd "git status --porcelain --ignored --untracked-files=normal .")
+         (buf (dired-k--process-buffer)))
     (set-process-sentinel
      (start-process-shell-command "dired-k-git-status" buf cmd)
      (lambda (proc _event)
@@ -230,22 +235,22 @@
           (string= "true" (buffer-substring-no-properties
                            (point) (line-end-position))))))))
 
-(defun dired-k--highlight (buf)
-  (with-current-buffer buf
-    (revert-buffer nil t)
-    (save-excursion
-      (dired-k--highlight-by-file-attribyte)
-      (when (dired-k--inside-git-repository-p)
-        (let ((root (dired-k--root-directory)))
-          (when root
-            (dired-k--start-git-status root buf 'dired-k--highlight-git-information)))))))
+(defun dired-k--highlight ()
+  (revert-buffer nil t)
+  (save-excursion
+    (dired-k--highlight-by-file-attribyte)
+    (when (dired-k--inside-git-repository-p)
+      (let ((root (dired-k--root-directory)))
+        (when root
+          (dired-k--start-git-status
+           root (current-buffer) 'dired-k--highlight-git-information))))))
 
 ;;;###autoload
 (defun dired-k ()
   "Highlighting dired buffer by file size, last modified time, and git status.
 This is inspired by `k' zsh script"
   (interactive)
-  (dired-k--highlight (current-buffer)))
+  (dired-k--highlight))
 
 (provide 'dired-k)
 
