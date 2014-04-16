@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.05 2014/04/16 syohex
+    - More improvement for asynchronous job
+
 Revision 0.04 2014/04/11 syohex
     - Improve for asynchronous execution
 
