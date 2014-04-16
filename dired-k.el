@@ -133,20 +133,24 @@
         (forward-line 1))
       files-status)))
 
-(defun dired-k--process-buffer ()
-  (when (buffer-live-p (get-buffer "*dired-k*"))
-    (kill-buffer (get-buffer "*dired-k*")))
-  (get-buffer-create "*dired-k*"))
+(defsubst dired-k--process-buffer ()
+  (get-buffer-create (format "*dired-k-%s*" dired-directory)))
 
 (defun dired-k--start-git-status (root curbuf callback)
   (let* ((cmd "git status --porcelain --ignored --untracked-files=normal .")
-         (buf (dired-k--process-buffer)))
-    (set-process-sentinel
-     (start-process-shell-command "dired-k-git-status" buf cmd)
-     (lambda (proc _event)
-       (when (eq (process-status proc) 'exit)
-         (let ((stats (dired-k--parse-git-status root proc)))
-           (funcall callback stats curbuf)))))))
+         (proc-buf (dired-k--process-buffer))
+         (old-proc (get-buffer-process proc-buf)))
+    (when (and old-proc (process-live-p old-proc))
+      (kill-process old-proc))
+    (let ((proc (start-process-shell-command "dired-k-git-status" proc-buf cmd)))
+      (set-process-query-on-exit-flag proc nil)
+      (set-process-sentinel
+       proc
+       (lambda (proc _event)
+         (when (eq (process-status proc) 'exit)
+           (let ((stats (dired-k--parse-git-status root proc)))
+             (funcall callback stats curbuf)
+             (kill-buffer proc-buf))))))))
 
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
