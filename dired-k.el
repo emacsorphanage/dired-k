@@ -40,6 +40,12 @@
   "k.sh in dired"
   :group 'dired)
 
+(defcustom dired-k-style nil
+  "Style for representing git status"
+  :type '(choice (const :tag "k.sh style" nil)
+                 (const :tag "Like 'git status --short'" git))
+  :group 'dired-k)
+
 (defface dired-k-modified
   '((t (:foreground "red" :weight bold)))
   "Face of modified file in git repository"
@@ -160,12 +166,30 @@
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
 
+(defsubst dired-k--git-style-char (stat)
+  (cl-case stat
+    (modified (propertize "M " 'face 'dired-k-modified))
+    (added (propertize "A " 'face 'dired-k-added))
+    (untracked (propertize "??" 'face 'dired-k-untracked))
+    (otherwise "  ")))
+
+(defun dired-k--highlight-line-normal (stat)
+  (let ((ov (make-overlay (1- (point)) (point)))
+        (stat-face (dired-k--git-status-color stat)))
+    (overlay-put ov 'display (propertize "|" 'face stat-face))))
+
+(defun dired-k--highlight-line-git-like (stat)
+  (goto-char (line-beginning-position))
+  (let ((ov (make-overlay (point) (+ (point) 2)))
+        (char (dired-k--git-style-char stat)))
+    (overlay-put ov 'display char)))
+
 (defun dired-k--highlight-line (file stats)
   (let ((stat (gethash file stats 'normal)))
     (unless (and (file-directory-p file) (eq stat 'normal))
-      (let ((ov (make-overlay (1- (point)) (point)))
-            (stat-face (dired-k--git-status-color stat)))
-        (overlay-put ov 'display (propertize "|" 'face stat-face))))))
+      (cl-case dired-k-style
+        (git (dired-k--highlight-line-git-like stat))
+        (otherwise (dired-k--highlight-line-normal stat))))))
 
 (defun dired-k--highlight-git-information (stats buf)
   (with-current-buffer buf
