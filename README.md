@@ -7,7 +7,13 @@
 
 ## screenshot
 
+### k.zsh style
+
 ![dired-k](image/dired-k.png)
+
+### git status --short style
+
+![dired-k-git-style](image/dired-k-style-git.png)
 
 
 ## Installation
@@ -24,6 +30,14 @@ Highlight dired buffer by following parameters.
 - File size
 - Modified time
 - Git status(if here is in git repository)
+
+
+## Customization
+
+### `dired-k-style`(Default `nil`)
+
+View like `k.zsh` if this value is `nil`. View like `git status --short` if
+this value is `'git`.
 
 
 ## Sample Configuration
