@@ -60,6 +60,11 @@
   "Face of untracked file in git repository"
   :group 'dired-k)
 
+(defface dired-k-ignored
+  '((t (:foreground "cyan" :weight bold)))
+  "Face of ignored file in git repository"
+  :group 'dired-k)
+
 (defface dired-k-directory
   '((t (:foreground "blue")))
   "Face of directory"
