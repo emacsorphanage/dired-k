@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.06 2014/04/25 syohex
+    - Add new viewing style like 'git status --short'
+
 Revision 0.05 2014/04/16 syohex
     - More improvement for asynchronous job
 
