@@ -46,6 +46,7 @@ this value is `'git`.
 
 ## Sample Configuration
 
+### dired-k
 ```lisp
 (require 'dired-k)
 (define-key dired-mode-map (kbd "K") 'dired-k)
@@ -55,4 +56,12 @@ this value is `'git`.
 
 ;; always execute dired-k when dired buffer is opened
 (add-hook 'dired-initial-position-hook 'dired-k)
+```
+
+### direx-k
+```lisp
+(require 'direx-k)
+
+(global-set-key (kbd "C-\\") 'direx-project:jump-to-project-root-other-window)
+(define-key direx:direx-mode-map (kbd "K") 'direx-k)
 ```
