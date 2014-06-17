@@ -15,6 +15,10 @@
 
 ![dired-k-git-style](image/dired-k-style-git.png)
 
+### direx version
+
+![direx-k](image/direx-k.png)
+
 
 ## Installation
 
