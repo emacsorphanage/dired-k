@@ -147,13 +147,14 @@
 (defsubst dired-k--process-buffer ()
   (get-buffer-create (format "*dired-k-%s*" dired-directory)))
 
-(defun dired-k--start-git-status (root curbuf callback)
-  (let* ((cmd "git status --porcelain --ignored --untracked-files=normal .")
-         (proc-buf (dired-k--process-buffer))
-         (old-proc (get-buffer-process proc-buf)))
+(defun dired-k--start-git-status (cmds root proc-buf callback)
+  (let ((curbuf (current-buffer))
+        (old-proc (get-buffer-process proc-buf)))
     (when (and old-proc (process-live-p old-proc))
       (kill-process old-proc))
-    (let ((proc (start-process-shell-command "dired-k-git-status" proc-buf cmd)))
+    (with-current-buffer proc-buf
+      (erase-buffer))
+    (let ((proc (apply 'start-process "dired-k-git-status" proc-buf cmds)))
       (set-process-query-on-exit-flag proc nil)
       (set-process-sentinel
        proc
@@ -276,7 +277,9 @@
       (let ((root (dired-k--root-directory)))
         (when root
           (dired-k--start-git-status
-           root (current-buffer) 'dired-k--highlight-git-information))))))
+           '("git" "status" "--porcelain" "--ignored" "--untracked-files=normal" ".")
+           root (dired-k--process-buffer)
+           'dired-k--highlight-git-information))))))
 
 ;;;###autoload
 (defun dired-k ()
