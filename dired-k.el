@@ -124,7 +124,7 @@
     (when (string-match regexp path)
       (concat here (match-string 1 path)))))
 
-(defun dired-k--parse-git-status (root proc)
+(defun dired-k--parse-git-status (root proc deep)
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
     (let ((files-status (make-hash-table :test 'equal)))
@@ -135,7 +135,7 @@
                (file (substring line 3))
                (here (expand-file-name default-directory))
                (full-path (concat root file)))
-          (if (dired-k--is-in-child-directory here full-path)
+          (if (and (not deep) (dired-k--is-in-child-directory here full-path))
               (let* ((subdir (dired-k--child-directory here full-path))
                      (cur-status (gethash subdir files-status)))
                 (puthash subdir (dired-k--subdir-status cur-status status)
@@ -149,6 +149,7 @@
 
 (defun dired-k--start-git-status (cmds root proc-buf callback)
   (let ((curbuf (current-buffer))
+        (deep (not (eq major-mode 'dired-mode)))
         (old-proc (get-buffer-process proc-buf)))
     (when (and old-proc (process-live-p old-proc))
       (kill-process old-proc))
@@ -160,7 +161,7 @@
        proc
        (lambda (proc _event)
          (when (eq (process-status proc) 'exit)
-           (let ((stats (dired-k--parse-git-status root proc)))
+           (let ((stats (dired-k--parse-git-status root proc deep)))
              (funcall callback stats curbuf)
              (kill-buffer proc-buf))))))))
 
