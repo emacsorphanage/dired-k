@@ -1,6 +1,9 @@
 Revision history for dired-k.el
 
-Revision 0.06 2014/06/18 syohex
+Revision 0.08 2014/06/18 syohex
+    - Fix not highlighting issue
+
+Revision 0.07 2014/06/18 syohex
     - Refactoring
     - Add direx-k
 
