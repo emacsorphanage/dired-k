@@ -1,5 +1,9 @@
 Revision history for dired-k.el
 
+Revision 0.09 2014/06/19 syohex
+    - Clear overlays before highlighting items at direx-k
+    - Add package dependency
+
 Revision 0.08 2014/06/18 syohex
     - Fix not highlighting issue
 
