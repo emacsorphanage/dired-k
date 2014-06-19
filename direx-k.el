@@ -3,7 +3,7 @@
 ;; Copyright (C) 2014 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
-;; Package-Requires: ((cl-lib "0.5") (emacs "24"))
+;; Package-Requires: ((cl-lib "0.5") (emacs "24") (direx "0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -52,19 +52,25 @@
       (let ((ov (make-overlay (point) (line-end-position)))
             (stat-face (direx-k--git-status-color stat)))
         (when stat-face
-          (overlay-put ov 'face stat-face))))))
+          (overlay-put ov 'face stat-face)
+          (overlay-put ov 'direx-k t))))))
+
+(defun direx-k--remove-overlays ()
+  (dolist (ov (overlays-in (point-min) (point-max)))
+    (when (overlay-get ov 'direx-k)
+      (delete-overlay ov))))
 
 (defun direx-k--highlight-git-information (stats buf)
   (with-current-buffer buf
+    (direx-k--remove-overlays)
     (save-excursion
       (goto-char (point-min))
       (let ((continue t))
         (while (and continue (not (eobp)))
           (direx:awhen (direx:item-at-point)
-            (let* ((file (direx:item-tree it))
-                   (name (direx:file-full-name file)))
-              (when name
-                (direx-k--highlight-item name stats))))
+            (let ((file (direx:item-tree it)))
+              (direx:awhen (direx:file-full-name file)
+                (direx-k--highlight-item it stats))))
           (setq continue (ignore-errors (direx:next-item) t)))))))
 
 (defsubst direx-k--process-buffer ()
