@@ -124,17 +124,23 @@
     (when (string-match regexp path)
       (concat here (match-string 1 path)))))
 
+(defun dired-k--fix-up-filename (file)
+  ;; If file name contains spaces, then it is wrapped double quote.
+  (if (string-match "\\`\"\\(.+\\)\"\\'" file)
+      (match-string-no-properties 1 file)
+    file))
+
 (defun dired-k--parse-git-status (root proc deep)
   (with-current-buffer (process-buffer proc)
     (goto-char (point-min))
-    (let ((files-status (make-hash-table :test 'equal)))
+    (let ((files-status (make-hash-table :test 'equal))
+          (here (expand-file-name default-directory)))
       (while (not (eobp))
         (let* ((line (buffer-substring-no-properties
                       (line-beginning-position) (line-end-position)))
                (status (dired-k--decide-status (substring line 0 2)))
                (file (substring line 3))
-               (here (expand-file-name default-directory))
-               (full-path (concat root file)))
+               (full-path (concat root (dired-k--fix-up-filename file))))
           (if (and (not deep) (dired-k--is-in-child-directory here full-path))
               (let* ((subdir (dired-k--child-directory here full-path))
                      (cur-status (gethash subdir files-status)))
