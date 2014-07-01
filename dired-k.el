@@ -268,13 +268,11 @@
         (dired-next-line 1)))))
 
 (defun dired-k--inside-git-repository-p ()
-  (when (executable-find "git")
-    (with-temp-buffer
-      (let ((cmd "git rev-parse --is-inside-work-tree"))
-        (when (zerop (call-process-shell-command cmd nil t))
-          (goto-char (point-min))
-          (string= "true" (buffer-substring-no-properties
-                           (point) (line-end-position))))))))
+  (with-temp-buffer
+    (when (zerop (call-process "git" nil t nil "rev-parse" "--is-inside-work-tree"))
+      (goto-char (point-min))
+      (string= "true" (buffer-substring-no-properties
+                       (point) (line-end-position))))))
 
 (defun dired-k--highlight ()
   (revert-buffer nil t)
