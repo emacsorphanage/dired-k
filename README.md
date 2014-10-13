@@ -43,6 +43,10 @@ Highlight dired buffer by following parameters.
 View like `k.zsh` if this value is `nil`. View like `git status --short` if
 this value is `'git`.
 
+### `dired-k-human-readable`(Default `nil`)
+
+Set non-nil if you add `-h` or `--human-readable` option to `dired-listing-switches`.
+
 
 ## Sample Configuration
 
