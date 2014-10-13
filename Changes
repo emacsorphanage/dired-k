@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.11 2014/10/13 syohex
+    - Support human readable size case
+
 Revision 0.10 2014/07/01 syohex
     - Fix for file whose name contains spaces
 
