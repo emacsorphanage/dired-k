@@ -46,6 +46,11 @@
                  (const :tag "Like 'git status --short'" git))
   :group 'dired-k)
 
+(defcustom dired-k-human-readable nil
+  "Use human readable size format option."
+  :type 'boolean
+  :group 'dired-k)
+
 (defface dired-k-modified
   '((t (:foreground "red" :weight bold)))
   "Face of modified file in git repository"
@@ -246,6 +251,13 @@
       (let ((ov (make-overlay (point) (1+ (point)))))
         (overlay-put ov 'face 'dired-k-directory)))))
 
+(defun dired-k--move-to-file-size-column ()
+  (goto-char (line-beginning-position))
+  (dotimes (i 4)
+    (skip-chars-forward " ")
+    (skip-chars-forward "^ "))
+  (skip-chars-forward " "))
+
 (defun dired-k--highlight-by-file-attribyte ()
   (save-excursion
     (goto-char (point-min))
@@ -254,17 +266,21 @@
       (let* ((file-attrs (file-attributes (dired-get-filename nil t)))
              (modified-time (nth 5 file-attrs))
              (file-size (nth 7 file-attrs))
-             (date-end-point (1- (point))))
+             (date-end-point (1- (point)))
+             end)
         (dired-k--highlight-directory)
-        (when (and file-size
-                   (re-search-backward (dired-k--size-to-regexp file-size) nil t))
-          (let ((start (match-beginning 0))
-                (end (match-end 0)))
-            (dired-k--highlight-by-size file-size start end)
-            (goto-char end)
-            (skip-chars-forward "^ \t")
-            (skip-chars-forward " \t")
-            (dired-k--highlight-by-date modified-time (point) date-end-point)))
+        (when file-size
+          (if dired-k-human-readable
+              (progn
+                (dired-k--move-to-file-size-column)
+                (let ((start (point)))
+                  (skip-chars-forward "^ ")
+                  (dired-k--highlight-by-size file-size start (point))))
+            (when (re-search-backward (dired-k--size-to-regexp file-size) nil t)
+              (dired-k--highlight-by-size file-size (match-beginning 0) (match-end 0))))
+          (skip-chars-forward "^ \t")
+          (skip-chars-forward " \t")
+          (dired-k--highlight-by-date modified-time (point) date-end-point))
         (dired-next-line 1)))))
 
 (defun dired-k--inside-git-repository-p ()
