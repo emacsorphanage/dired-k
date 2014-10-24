@@ -1,4 +1,4 @@
-# dired-k.el [![Build Status](https://travis-ci.org/syohex/emacs-dired-k.png)](https://travis-ci.org/syohex/emacs-dired-k)
+# dired-k.el [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 `dired-k.el` highlights dired buffer like [k](https://github.com/supercrabtree/k).
 
@@ -69,3 +69,10 @@ Set non-nil if you add `-h` or `--human-readable` option to `dired-listing-switc
 (global-set-key (kbd "C-\\") 'direx-project:jump-to-project-root-other-window)
 (define-key direx:direx-mode-map (kbd "K") 'direx-k)
 ```
+
+[travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.png
+[travis-link]: https://travis-ci.org/syohex/emacs-dired-k
+[melpa-link]: http://melpa.milkbox.net/#/dired-k
+[melpa-stable-link]: http://melpa-stable.milkbox.net/#/dired-k
+[melpa-badge]: http://melpa.milkbox.net/packages/dired-k-badge.svg
+[melpa-stable-badge]: http://melpa-stable.milkbox.net/packages/dired-k-badge.svg
