@@ -127,7 +127,7 @@
 (defun dired-k--child-directory (here path)
   (let ((regexp (concat here "\\([^/]+\\)")))
     (when (string-match regexp path)
-      (concat here (match-string 1 path)))))
+      (concat here (match-string-no-properties 1 path)))))
 
 (defun dired-k--fix-up-filename (file)
   ;; If file name contains spaces, then it is wrapped double quote.
@@ -285,7 +285,7 @@
 
 (defun dired-k--inside-git-repository-p ()
   (with-temp-buffer
-    (when (zerop (call-process "git" nil t nil "rev-parse" "--is-inside-work-tree"))
+    (when (zerop (process-file "git" nil t nil "rev-parse" "--is-inside-work-tree"))
       (goto-char (point-min))
       (string= "true" (buffer-substring-no-properties
                        (point) (line-end-position))))))
