@@ -22,7 +22,7 @@
 
 ## Installation
 
-You can install `dired-k` from [MELPA](http://melpa.milkbox.net/) with package.el.
+You can install `dired-k` from [MELPA](http://melpa.org/) with package.el.
 
 
 ## Commands
@@ -72,7 +72,7 @@ Set non-nil if you add `-h` or `--human-readable` option to `dired-listing-switc
 
 [travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.png
 [travis-link]: https://travis-ci.org/syohex/emacs-dired-k
-[melpa-link]: http://melpa.milkbox.net/#/dired-k
-[melpa-stable-link]: http://melpa-stable.milkbox.net/#/dired-k
-[melpa-badge]: http://melpa.milkbox.net/packages/dired-k-badge.svg
-[melpa-stable-badge]: http://melpa-stable.milkbox.net/packages/dired-k-badge.svg
+[melpa-link]: http://melpa.org/#/dired-k
+[melpa-stable-link]: http://stable.melpa.org/#/dired-k
+[melpa-badge]: http://melpa.org/packages/dired-k-badge.svg
+[melpa-stable-badge]: http://stable.melpa.org/packages/dired-k-badge.svg
