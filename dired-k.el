@@ -253,7 +253,7 @@
 
 (defun dired-k--move-to-file-size-column ()
   (goto-char (line-beginning-position))
-  (dotimes (i 4)
+  (dotimes (_i 4)
     (skip-chars-forward " ")
     (skip-chars-forward "^ "))
   (skip-chars-forward " "))
@@ -266,8 +266,7 @@
       (let* ((file-attrs (file-attributes (dired-get-filename nil t)))
              (modified-time (nth 5 file-attrs))
              (file-size (nth 7 file-attrs))
-             (date-end-point (1- (point)))
-             end)
+             (date-end-point (1- (point))))
         (dired-k--highlight-directory)
         (when file-size
           (if dired-k-human-readable
