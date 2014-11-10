@@ -166,7 +166,7 @@
       (kill-process old-proc))
     (with-current-buffer proc-buf
       (erase-buffer))
-    (let ((proc (apply 'start-process "dired-k-git-status" proc-buf cmds)))
+    (let ((proc (apply 'start-file-process "dired-k-git-status" proc-buf cmds)))
       (set-process-query-on-exit-flag proc nil)
       (set-process-sentinel
        proc
