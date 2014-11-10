@@ -204,6 +204,15 @@
         (git (dired-k--highlight-line-git-like stat))
         (otherwise (dired-k--highlight-line-normal stat))))))
 
+(defsubst dired-k--directory-end-p ()
+  (let ((line (buffer-substring-no-properties
+               (line-beginning-position) (line-end-position))))
+    (string-match-p "\\`\\s-*\\'" line)))
+
+(defsubst dired-k--move-to-next-directory ()
+  (dired-next-subdir 1 t)
+  (dired-next-line 2))
+
 (defun dired-k--highlight-git-information (stats buf)
   (with-current-buffer buf
     (save-excursion
@@ -213,7 +222,9 @@
         (let ((filename (dired-get-filename nil t)))
           (when filename
             (dired-k--highlight-line filename stats)))
-        (dired-next-line 1)))))
+        (dired-next-line 1)
+        (when (dired-k--directory-end-p)
+          (dired-k--move-to-next-directory))))))
 
 (defsubst dired-k--size-face (size)
   (cl-loop for (border . color) in dired-k-size-colors
@@ -280,7 +291,9 @@
           (skip-chars-forward "^ \t")
           (skip-chars-forward " \t")
           (dired-k--highlight-by-date modified-time (point) date-end-point))
-        (dired-next-line 1)))))
+        (dired-next-line 1)
+        (when (dired-k--directory-end-p)
+          (dired-k--move-to-next-directory))))))
 
 (defun dired-k--inside-git-repository-p ()
   (with-temp-buffer
