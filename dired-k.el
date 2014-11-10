@@ -146,12 +146,12 @@
                (status (dired-k--decide-status (substring line 0 2)))
                (file (substring line 3))
                (full-path (concat root (dired-k--fix-up-filename file))))
-          (if (and (not deep) (dired-k--is-in-child-directory here full-path))
-              (let* ((subdir (dired-k--child-directory here full-path))
-                     (cur-status (gethash subdir files-status)))
-                (puthash subdir (dired-k--subdir-status cur-status status)
-                         files-status))
-            (puthash full-path status files-status)))
+          (when (and (not deep) (dired-k--is-in-child-directory here full-path))
+            (let* ((subdir (dired-k--child-directory here full-path))
+                   (cur-status (gethash subdir files-status)))
+              (puthash subdir (dired-k--subdir-status cur-status status)
+                       files-status)))
+          (puthash full-path status files-status))
         (forward-line 1))
       files-status)))
 
@@ -204,6 +204,15 @@
         (git (dired-k--highlight-line-git-like stat))
         (otherwise (dired-k--highlight-line-normal stat))))))
 
+(defsubst dired-k--directory-end-p ()
+  (let ((line (buffer-substring-no-properties
+               (line-beginning-position) (line-end-position))))
+    (string-match-p "\\`\\s-*\\'" line)))
+
+(defsubst dired-k--move-to-next-directory ()
+  (dired-next-subdir 1 t)
+  (dired-next-line 2))
+
 (defun dired-k--highlight-git-information (stats buf)
   (with-current-buffer buf
     (save-excursion
@@ -213,7 +222,9 @@
         (let ((filename (dired-get-filename nil t)))
           (when filename
             (dired-k--highlight-line filename stats)))
-        (dired-next-line 1)))))
+        (dired-next-line 1)
+        (when (dired-k--directory-end-p)
+          (dired-k--move-to-next-directory))))))
 
 (defsubst dired-k--size-face (size)
   (cl-loop for (border . color) in dired-k-size-colors
@@ -253,7 +264,7 @@
 
 (defun dired-k--move-to-file-size-column ()
   (goto-char (line-beginning-position))
-  (dotimes (i 4)
+  (dotimes (_i 4)
     (skip-chars-forward " ")
     (skip-chars-forward "^ "))
   (skip-chars-forward " "))
@@ -266,8 +277,7 @@
       (let* ((file-attrs (file-attributes (dired-get-filename nil t)))
              (modified-time (nth 5 file-attrs))
              (file-size (nth 7 file-attrs))
-             (date-end-point (1- (point)))
-             end)
+             (date-end-point (1- (point))))
         (dired-k--highlight-directory)
         (when file-size
           (if dired-k-human-readable
@@ -281,7 +291,9 @@
           (skip-chars-forward "^ \t")
           (skip-chars-forward " \t")
           (dired-k--highlight-by-date modified-time (point) date-end-point))
-        (dired-next-line 1)))))
+        (dired-next-line 1)
+        (when (dired-k--directory-end-p)
+          (dired-k--move-to-next-directory))))))
 
 (defun dired-k--inside-git-repository-p ()
   (with-temp-buffer

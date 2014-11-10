@@ -1,4 +1,4 @@
-;;; private-functions.el ---
+;;; private-functions.el --- test for dired-k private functions
 
 ;; Copyright (C) 2014 by Syohei YOSHIDA
 
