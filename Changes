@@ -1,5 +1,9 @@
 Revision history for dired-k.el
 
+Revision 0.13 2014/11/11 syohex
+    - Fix for tramp(Reported by panaak)
+    - Checking error status
+
 Revision 0.12 2014/10/25 syohex
     - Fix for tramp
     - Refactoring
