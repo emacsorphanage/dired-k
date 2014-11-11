@@ -172,9 +172,11 @@
        proc
        (lambda (proc _event)
          (when (eq (process-status proc) 'exit)
-           (let ((stats (dired-k--parse-git-status root proc deep)))
-             (funcall callback stats curbuf)
-             (kill-buffer proc-buf))))))))
+           (if (/= (process-exit-status proc) 0)
+               (message "Failed: %s" cmds)
+             (let ((stats (dired-k--parse-git-status root proc deep)))
+               (funcall callback stats curbuf)
+               (kill-buffer proc-buf)))))))))
 
 (defsubst dired-k--root-directory ()
   (expand-file-name (locate-dominating-file default-directory ".git/")))
