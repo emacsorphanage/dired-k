@@ -5,4 +5,7 @@
 (depends-on "direx")
 
 (development
- (depends-on "ert"))
+ (depends-on "ert")
+
+ ;; For checking dark color theme
+ (depends-on "zenburn-theme"))
