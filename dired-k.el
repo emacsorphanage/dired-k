@@ -81,6 +81,16 @@
   "Face of directory"
   :group 'dired-k)
 
+(defface dired-k--dummy
+  '((((class color) (background light))
+     (:background "red"))
+    (((class color) (background dark))
+     (:background "blue")))
+  "Don't use this theme")
+
+(defsubst dired-k--light-p ()
+  (string= (face-background 'dired-k--dummy) "red"))
+
 (defcustom dired-k-size-colors
   '((1024 . "chartreuse4") (2048 . "chartreuse3") (3072 . "chartreuse2")
     (5120 . "chartreuse1") (10240 . "yellow3") (20480 . "yellow2") (40960 . "yellow")
@@ -91,9 +101,13 @@
   :group 'dired-k)
 
 (defcustom dired-k-date-colors
-  '((0 . "red") (60 . "white") (3600 . "grey80")
-    (86400 . "grey70") (604800 . "grey40") (2419200 . "grey40")
-    (15724800 . "grey30") (31449600 . "grey25") (62899200 . "grey10"))
+  (if (dired-k--light-p)
+      '((0 . "red") (60 . "grey0") (3600 . "grey10")
+        (86400 . "grey25") (604800 . "grey40") (2419200 . "grey40")
+        (15724800 . "grey50") (31449600 . "grey65") (62899200 . "grey85"))
+    '((0 . "red") (60 . "white") (3600 . "grey90")
+      (86400 . "grey80") (604800 . "grey65") (2419200 . "grey65")
+      (15724800 . "grey50") (31449600 . "grey45") (62899200 . "grey35")))
   "assoc of file modified time and color"
   :type '(repeat (cons (integer :tag "Elapsed seconds from last modified")
                        (string :tag "Color")))
