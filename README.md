@@ -70,7 +70,7 @@ Set non-nil if you add `-h` or `--human-readable` option to `dired-listing-switc
 (define-key direx:direx-mode-map (kbd "K") 'direx-k)
 ```
 
-[travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.png
+[travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.svg
 [travis-link]: https://travis-ci.org/syohex/emacs-dired-k
 [melpa-link]: http://melpa.org/#/dired-k
 [melpa-stable-link]: http://stable.melpa.org/#/dired-k
