@@ -204,8 +204,9 @@
 
 (defun dired-k--highlight-line-normal (stat)
   (let ((ov (make-overlay (1- (point)) (point)))
-        (stat-face (dired-k--git-status-color stat)))
-    (overlay-put ov 'display (propertize "|" 'face stat-face))))
+        (stat-face (dired-k--git-status-color stat))
+        (sign (if (memq stat '(modified added)) "+" "|")))
+    (overlay-put ov 'display (propertize sign 'face stat-face))))
 
 (defun dired-k--highlight-line-git-like (stat)
   (goto-char (line-beginning-position))
