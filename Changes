@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.14 2015/06/21 syohex
+    - Change state signs same sa k zsh
+
 Revision 0.13 2014/11/11 syohex
     - Fix for tramp(Reported by panaak)
     - Checking error status
