@@ -216,10 +216,9 @@
 
 (defun dired-k--highlight-line (file stats)
   (let ((stat (gethash file stats 'normal)))
-    (unless (and (file-directory-p file) (eq stat 'normal))
-      (cl-case dired-k-style
-        (git (dired-k--highlight-line-git-like stat))
-        (otherwise (dired-k--highlight-line-normal stat))))))
+    (cl-case dired-k-style
+      (git (dired-k--highlight-line-git-like stat))
+      (otherwise (dired-k--highlight-line-normal stat)))))
 
 (defsubst dired-k--directory-end-p ()
   (let ((line (buffer-substring-no-properties
@@ -237,7 +236,7 @@
       (dired-next-line 2)
       (while (not (eobp))
         (let ((filename (dired-get-filename nil t)))
-          (when filename
+          (when (and filename (not (string-match-p "/\\.?\\.\\'" filename)))
             (dired-k--highlight-line filename stats)))
         (dired-next-line 1)
         (when (dired-k--directory-end-p)
