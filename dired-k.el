@@ -193,7 +193,7 @@
                (kill-buffer proc-buf)))))))))
 
 (defsubst dired-k--root-directory ()
-  (expand-file-name (locate-dominating-file default-directory ".git/")))
+  (locate-dominating-file default-directory ".git/"))
 
 (defsubst dired-k--git-style-char (stat)
   (cl-case stat
@@ -327,7 +327,7 @@
         (when root
           (dired-k--start-git-status
            '("git" "status" "--porcelain" "--ignored" "--untracked-files=normal" ".")
-           root (dired-k--process-buffer)
+           (expand-file-name root) (dired-k--process-buffer)
            'dired-k--highlight-git-information))))))
 
 ;;;###autoload
