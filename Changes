@@ -1,5 +1,9 @@
 Revision history for dired-k.el
 
+Revision 0.15 2015/06/21 syohex
+    - Highlight like k.sh
+    - Fix case when .git is not found
+
 Revision 0.14 2015/06/21 syohex
     - Change state signs same sa k zsh
 
