@@ -22,7 +22,7 @@
 
 ## Installation
 
-You can install `dired-k` from [MELPA](http://melpa.org/) with package.el.
+You can install `dired-k` from [MELPA](https://melpa.org/) with package.el.
 
 
 ## Commands
@@ -76,7 +76,7 @@ Number of spaces around git status character.
 
 [travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.svg
 [travis-link]: https://travis-ci.org/syohex/emacs-dired-k
-[melpa-link]: http://melpa.org/#/dired-k
-[melpa-stable-link]: http://stable.melpa.org/#/dired-k
-[melpa-badge]: http://melpa.org/packages/dired-k-badge.svg
-[melpa-stable-badge]: http://stable.melpa.org/packages/dired-k-badge.svg
+[melpa-link]: https://melpa.org/#/dired-k
+[melpa-stable-link]: https://stable.melpa.org/#/dired-k
+[melpa-badge]: https://melpa.org/packages/dired-k-badge.svg
+[melpa-stable-badge]: https://stable.melpa.org/packages/dired-k-badge.svg
