@@ -113,6 +113,11 @@
                        (string :tag "Color")))
   :group 'dired-k)
 
+(defcustom dired-k-padding 0
+  "padding around status characters"
+  :type 'integer
+  :group 'dired-k)
+
 (defsubst dired-k--git-status-color (stat)
   (cl-case stat
     (modified 'dired-k-modified)
@@ -202,11 +207,18 @@
     (untracked (propertize "??" 'face 'dired-k-untracked))
     (otherwise "  ")))
 
+(defun dired-k--pad-spaces (str)
+  (if (zerop dired-k-padding)
+      str
+    (let ((spaces (cl-loop repeat dired-k-padding concat " ")))
+      (concat spaces str spaces))))
+
 (defun dired-k--highlight-line-normal (stat)
   (let ((ov (make-overlay (1- (point)) (point)))
         (stat-face (dired-k--git-status-color stat))
         (sign (if (memq stat '(modified added)) "+" "|")))
-    (overlay-put ov 'display (propertize sign 'face stat-face))))
+    (overlay-put ov 'display
+                 (propertize (dired-k--pad-spaces sign) 'face stat-face))))
 
 (defun dired-k--highlight-line-git-like (stat)
   (goto-char (line-beginning-position))
