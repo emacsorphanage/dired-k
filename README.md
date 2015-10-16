@@ -47,6 +47,10 @@ this value is `'git`.
 
 Set non-nil if you add `-h` or `--human-readable` option to `dired-listing-switches`.
 
+### `dired-k-padding`(Default 0)
+
+Number of spaces around git status character.
+
 
 ## Sample Configuration
 
