@@ -345,6 +345,7 @@
 
 ;;;###autoload
 (defun dired-k-no-revert ()
+  "Same as `dired-k' except not calling `revert-buffer'."
   (interactive)
   (dired-k--highlight nil))
 
