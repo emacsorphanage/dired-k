@@ -35,6 +35,11 @@ Highlight dired buffer by following parameters.
 - Modified time
 - Git status(if here is in git repository)
 
+### `dired-k-no-revert`
+
+Same as `dired-k`, except this command does not call `revert-buffert`.
+This command can set to a hook `dired-after-readin-hook`.
+
 
 ## Customization
 
@@ -64,6 +69,8 @@ Number of spaces around git status character.
 
 ;; always execute dired-k when dired buffer is opened
 (add-hook 'dired-initial-position-hook 'dired-k)
+
+(add-hook 'dired-after-readin-hook #'dired-k-no-revert)
 ```
 
 ### direx-k
