@@ -1,6 +1,6 @@
 ;;; direx-k.el --- Display git status in direx-el -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015 by Syohei YOSHIDA
+;; Copyright (C) 2016 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; Package-Requires: ((cl-lib "0.5") (emacs "24") (direx "0"))
