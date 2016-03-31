@@ -22,7 +22,11 @@
 
 ## Installation
 
-You can install `dired-k` from [MELPA](https://melpa.org/) with package.el.
+`dired-k` is available on [MELPA](https://melpa.org/) and [MELPA stable](https://stable.melpa.org/)
+
+You can install `dired-k` with the following command.
+
+<kbd>M-x package-install [RET] dired-k [RET]</kbd>
 
 
 ## Commands
