@@ -1,5 +1,9 @@
 Revision history for dired-k.el
 
+Revision 0.17 2016/08/18 syohex
+    - Check process buffer is lived(#32)
+      If two processes are launched then buffer may be killed
+
 Revision 0.16 2015/11/08 syohex
     - Introduce padding parameter for git status sign
     - Add no revert interface for 'dired-after-readin-hook'(Proposed by Alexander-Shukaev)
