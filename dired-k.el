@@ -71,6 +71,11 @@
   "Face of untracked file in git repository"
   :group 'dired-k)
 
+(defface dired-k-partial-ignored
+  '((t (:foreground "green3" :weight bold)))
+  "Face of subdir in git repository which contains both normal and ignored file"
+  :group 'dired-k)
+
 (defface dired-k-ignored
   '((t (:foreground "cyan" :weight bold)))
   "Face of ignored file in git repository"
@@ -124,6 +129,7 @@
     (normal 'dired-k-commited)
     (added 'dired-k-added)
     (untracked 'dired-k-untracked)
+	(partial-ignored 'dired-k-partial-ignored)
     (ignored 'dired-k-ignored)))
 
 (defsubst dired-k--decide-status (status)
@@ -133,7 +139,11 @@
         ((string= status "A ") 'added)
         (t 'normal)))
 
-(defsubst dired-k--subdir-status (current-status new-status)
+(defsubst dired-k--subdir-status (full-path subdir current-status new-status)
+  (setq new-status (or (and (eq new-status 'ignored)
+					(not (equal (directory-file-name full-path) subdir)) ; not subdir itself
+					'partial-ignored)
+				   new-status))
   (cond ((eq current-status 'modified) 'modified)
         ((eq new-status 'added) 'added)
         ((not current-status) new-status)
@@ -168,7 +178,7 @@
           (when (and (not deep) (dired-k--is-in-child-directory here full-path))
             (let* ((subdir (dired-k--child-directory here full-path))
                    (cur-status (gethash subdir files-status)))
-              (puthash subdir (dired-k--subdir-status cur-status status)
+              (puthash subdir (dired-k--subdir-status full-path subdir cur-status status)
                        files-status)))
           (puthash full-path status files-status))
         (forward-line 1))
