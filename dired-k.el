@@ -137,7 +137,7 @@
   (cond ((eq current-status 'modified) 'modified)
         ((eq new-status 'added) 'added)
         ((not current-status) new-status)
-        (t 'normal)))
+        (t current-status)))
 
 (defun dired-k--is-in-child-directory (here path)
   (let ((relpath (file-relative-name path here)))
