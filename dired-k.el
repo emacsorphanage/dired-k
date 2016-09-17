@@ -167,6 +167,9 @@
                (full-path (concat root (dired-k--fix-up-filename file))))
           (when (and (not deep) (dired-k--is-in-child-directory here full-path))
             (let* ((subdir (dired-k--child-directory here full-path))
+                   (status (if (and (eq status 'ignored) (not (file-directory-p full-path)))
+                               'normal
+                             status))
                    (cur-status (gethash subdir files-status)))
               (puthash subdir (dired-k--subdir-status cur-status status)
                        files-status)))
