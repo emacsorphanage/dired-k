@@ -1,5 +1,8 @@
 Revision history for dired-k.el
 
+Revision 0.18 2016/09/19 syohex
+    - Fix sub directory status issue(#34, #35)
+
 Revision 0.17 2016/08/18 syohex
     - Check process buffer is lived(#32)
       If two processes are launched then buffer may be killed
