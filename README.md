@@ -9,15 +9,15 @@
 
 ### k.zsh style
 
-![dired-k](image/dired-k.png)
+![Screenshot of dired-k command](image/dired-k.png)
 
 ### git status --short style
 
-![dired-k-git-style](image/dired-k-style-git.png)
+![Screenshot of dired-k with git style](image/dired-k-style-git.png)
 
 ### direx version
 
-![direx-k](image/direx-k.png)
+![Screenshot of direx-k](image/direx-k.png)
 
 
 ## Installation
