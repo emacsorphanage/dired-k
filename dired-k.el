@@ -43,43 +43,35 @@
 (defcustom dired-k-style nil
   "Style for representing git status"
   :type '(choice (const :tag "k.sh style" nil)
-                 (const :tag "Like 'git status --short'" git))
-  :group 'dired-k)
+                 (const :tag "Like 'git status --short'" git)))
 
 (defcustom dired-k-human-readable nil
   "Use human readable size format option."
-  :type 'boolean
-  :group 'dired-k)
+  :type 'boolean)
 
 (defface dired-k-modified
   '((t (:foreground "red" :weight bold)))
-  "Face of modified file in git repository"
-  :group 'dired-k)
+  "Face of modified file in git repository")
 
 (defface dired-k-commited
   '((t (:foreground "green" :weight bold)))
-  "Face of commited file in git repository"
-  :group 'dired-k)
+  "Face of commited file in git repository")
 
 (defface dired-k-added
   '((t (:foreground "magenta" :weight bold)))
-  "Face of added file in git repository"
-  :group 'dired-k)
+  "Face of added file in git repository")
 
 (defface dired-k-untracked
   '((t (:foreground "orange" :weight bold)))
-  "Face of untracked file in git repository"
-  :group 'dired-k)
+  "Face of untracked file in git repository")
 
 (defface dired-k-ignored
   '((t (:foreground "cyan" :weight bold)))
-  "Face of ignored file in git repository"
-  :group 'dired-k)
+  "Face of ignored file in git repository")
 
 (defface dired-k-directory
   '((t (:foreground "blue")))
-  "Face of directory"
-  :group 'dired-k)
+  "Face of directory")
 
 (defface dired-k--dummy
   '((((class color) (background light))
@@ -97,8 +89,7 @@
     (102400 . "orange3") (262144 . "orange2") (524288 . "orange"))
   "assoc of file size and color"
   :type '(repeat (cons (integer :tag "File size")
-                       (string :tag "Color")))
-  :group 'dired-k)
+                       (string :tag "Color"))))
 
 (defcustom dired-k-date-colors
   (if (dired-k--light-p)
@@ -110,13 +101,11 @@
       (15724800 . "grey50") (31449600 . "grey45") (62899200 . "grey35")))
   "assoc of file modified time and color"
   :type '(repeat (cons (integer :tag "Elapsed seconds from last modified")
-                       (string :tag "Color")))
-  :group 'dired-k)
+                       (string :tag "Color"))))
 
 (defcustom dired-k-padding 0
   "padding around status characters"
-  :type 'integer
-  :group 'dired-k)
+  :type 'integer)
 
 (defsubst dired-k--git-status-color (stat)
   (cl-case stat
