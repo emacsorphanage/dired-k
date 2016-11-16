@@ -3,7 +3,7 @@
 ;; Copyright (C) 2016 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
-;; Package-Requires: ((cl-lib "0.5") (emacs "24") (direx "0"))
+;; Package-Requires: ((emacs "24.3") (direx "0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -29,18 +29,15 @@
 
 (defface direx-k-modified
   '((t (:foreground "orange" :weight bold)))
-  "Face of added file in git repository"
-  :group 'dired-k)
+  "Face of added file in git repository")
 
 (defface direx-k-untracked
   '((t (:foreground "green")))
-  "Face of untracked file in git repository"
-  :group 'dired-k)
+  "Face of untracked file in git repository")
 
 (defface direx-k-ignored
   '((t (:foreground "grey")))
-  "Face of ignored file in git repository"
-  :group 'dired-k)
+  "Face of ignored file in git repository")
 
 (defsubst direx-k--git-status-color (stat)
   (cl-case stat
