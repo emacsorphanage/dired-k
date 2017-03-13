@@ -237,17 +237,19 @@
   (dired-next-line 2))
 
 (defun dired-k--highlight-git-information (stats buf)
-  (with-current-buffer buf
-    (save-excursion
-      (goto-char (point-min))
-      (dired-next-line 2)
-      (while (not (eobp))
-        (let ((filename (dired-get-filename nil t)))
-          (when (and filename (not (string-match-p "/\\.?\\.\\'" filename)))
-            (dired-k--highlight-line filename stats)))
-        (dired-next-line 1)
-        (when (dired-k--directory-end-p)
-          (dired-k--move-to-next-directory))))))
+  (if (not (buffer-live-p buf))
+      (message "Buffer %s no longer lives" buf)
+    (with-current-buffer buf
+      (save-excursion
+        (goto-char (point-min))
+        (dired-next-line 2)
+        (while (not (eobp))
+          (let ((filename (dired-get-filename nil t)))
+            (when (and filename (not (string-match-p "/\\.?\\.\\'" filename)))
+              (dired-k--highlight-line filename stats)))
+          (dired-next-line 1)
+          (when (dired-k--directory-end-p)
+            (dired-k--move-to-next-directory)))))))
 
 (defsubst dired-k--size-face (size)
   (cl-loop for (border . color) in dired-k-size-colors
@@ -336,7 +338,7 @@
           (dired-k--start-git-status
            '("git" "status" "--porcelain" "--ignored" "--untracked-files=normal" ".")
            (expand-file-name root) (dired-k--process-buffer)
-           'dired-k--highlight-git-information))))))
+           #'dired-k--highlight-git-information))))))
 
 ;;;###autoload
 (defun dired-k-no-revert ()
