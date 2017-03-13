@@ -1,6 +1,6 @@
 ;;; dired-k.el --- highlight dired buffer by file size, modified time, git status -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016 by Syohei YOSHIDA
+;; Copyright (C) 2017 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-dired-k
