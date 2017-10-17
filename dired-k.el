@@ -174,7 +174,7 @@
         (deep (not (eq major-mode 'dired-mode)))
         (old-proc (get-buffer-process proc-buf)))
     (when (and old-proc (process-live-p old-proc))
-      (kill-process old-proc)
+      (interrupt-process old-proc)
       (unless (buffer-live-p proc-buf)
         (setq proc-buf (dired-k--process-buffer))))
     (with-current-buffer proc-buf
