@@ -1,9 +1,10 @@
-;;; dired-k.el --- highlight dired buffer by file size, modified time, git status -*- lexical-binding: t; -*-
+;;; dired-k.el --- Highlight dired by size, date, git status -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017 by Syohei YOSHIDA
+;; Copyright (C) 2017-2020 Syohei YOSHIDA and Neil Okamoto
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
-;; URL: https://github.com/syohex/emacs-dired-k
+;; Maintainer: Neil Okamoto <neil.okamoto+melpa@gmail.com>
+;; URL: https://github.com/emacsorphanage/dired-k
 ;; Version: 0.19
 ;; Package-Requires: ((emacs "24.3"))
 
@@ -156,7 +157,8 @@
                (full-path (concat root (dired-k--fix-up-filename file))))
           (when (and (not deep) (dired-k--is-in-child-directory here full-path))
             (let* ((subdir (dired-k--child-directory here full-path))
-                   (status (if (and (eq status 'ignored) (not (file-directory-p full-path)))
+                   (status (if (and (eq status 'ignored)
+                                    (not (file-directory-p full-path)))
                                'normal
                              status))
                    (cur-status (gethash subdir files-status)))
@@ -312,7 +314,9 @@
                   (skip-chars-forward "^ ")
                   (dired-k--highlight-by-size file-size start (point))))
             (when (re-search-backward (dired-k--size-to-regexp file-size) nil t)
-              (dired-k--highlight-by-size file-size (match-beginning 0) (match-end 0))))
+              (dired-k--highlight-by-size file-size
+                                          (match-beginning 0)
+                                          (match-end 0))))
           (skip-chars-forward "^ \t")
           (skip-chars-forward " \t")
           (dired-k--highlight-by-date modified-time (point) date-end-point))
@@ -356,3 +360,8 @@ This is inspired by `k' zsh script"
 (provide 'dired-k)
 
 ;;; dired-k.el ends here
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; fill-column: 90
+;; End:
