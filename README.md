@@ -1,4 +1,8 @@
-# dired-k.el [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
+# dired-k.el
+
+[![melpa badge][melpa-badge]][melpa-link]
+[![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
+[![circleci badge][circleci-badge]][circleci-link]
 
 `dired-k.el` highlights dired buffer like [k](https://github.com/supercrabtree/k).
 
@@ -85,9 +89,9 @@ Number of spaces around git status character.
 (define-key direx:direx-mode-map (kbd "K") 'direx-k)
 ```
 
-[travis-badge]: https://travis-ci.org/syohex/emacs-dired-k.svg
-[travis-link]: https://travis-ci.org/syohex/emacs-dired-k
 [melpa-link]: https://melpa.org/#/dired-k
 [melpa-stable-link]: https://stable.melpa.org/#/dired-k
+[circleci-link]: https://app.circleci.com/pipelines/github/emacsorphanage/dired-k
 [melpa-badge]: https://melpa.org/packages/dired-k-badge.svg
 [melpa-stable-badge]: https://stable.melpa.org/packages/dired-k-badge.svg
+[circleci-badge]: https://img.shields.io/circleci/project/github/emacsorphanage/dired-k.svg
