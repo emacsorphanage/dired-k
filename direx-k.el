@@ -1,9 +1,12 @@
 ;;; direx-k.el --- Display git status in direx-el -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017 by Syohei YOSHIDA
+;; Copyright (C) 2017-2020 Syohei YOSHIDA and Neil Okamoto
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
-;; Package-Requires: ((emacs "24.3") (direx "0"))
+;; Maintainer: Neil Okamoto <neil.okamoto+melpa@gmail.com>
+;; URL: https://github.com/emacsorphanage/dired-k
+;; Version: 0.19
+;; Package-Requires: ((emacs "24.3") (direx "1.0.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,17 +30,26 @@
 (require 'dired-k)
 (require 'direx-project)
 
+(defgroup direx-k nil
+  "Display git status in direx-el"
+  :prefix "direx-k-"
+  :group 'dired
+  :link '(url-link :tag "Github" "https://github.com/emacsorphanage/direx-k"))
+
 (defface direx-k-modified
   '((t (:foreground "orange" :weight bold)))
-  "Face of added file in git repository")
+  "Face of added file in git repository"
+  :group 'direx-k)
 
 (defface direx-k-untracked
   '((t (:foreground "green")))
-  "Face of untracked file in git repository")
+  "Face of untracked file in git repository"
+  :group 'direx-k)
 
 (defface direx-k-ignored
   '((t (:foreground "grey")))
-  "Face of ignored file in git repository")
+  "Face of ignored file in git repository"
+  :group 'direx-k)
 
 (defsubst direx-k--git-status-color (stat)
   (cl-case stat
@@ -90,3 +102,8 @@
 (provide 'direx-k)
 
 ;;; direx-k.el ends here
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; fill-column: 85
+;; End:
