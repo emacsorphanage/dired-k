@@ -46,6 +46,10 @@
   :type '(choice (const :tag "k.sh style" nil)
                  (const :tag "Like 'git status --short'" git)))
 
+(defcustom dired-k-allow-remote nil
+  "Whether to run dired on remote directories, i.e. over TRAMP."
+  :type 'boolean)
+
 (defcustom dired-k-human-readable nil
   "Use human readable size format option."
   :type 'boolean)
@@ -326,7 +330,9 @@
 
 (defun dired-k--inside-git-repository-p ()
   (with-temp-buffer
-    (when (zerop (process-file "git" nil t nil "rev-parse" "--is-inside-work-tree"))
+    (when (and (or (not (file-remote-p default-directory))
+                   dired-k-allow-remote)
+               (zerop (process-file "git" nil t nil "rev-parse" "--is-inside-work-tree")))
       (goto-char (point-min))
       (string= "true" (buffer-substring-no-properties
                        (point) (line-end-position))))))
