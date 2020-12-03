@@ -244,7 +244,10 @@
     (with-current-buffer buf
       (save-excursion
         (goto-char (point-min))
-        (dired-next-line 2)
+        ; (dired-next-line 2)
+        (if (bound-and-true-p dired-omit-mode)
+            (dired-next-line 1)
+          (dired-next-line 2))
         (while (not (eobp))
           (let ((filename (dired-get-filename nil t)))
             (when (and filename (not (string-match-p "/\\.?\\.\\'" filename)))
