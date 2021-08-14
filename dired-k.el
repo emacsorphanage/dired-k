@@ -244,7 +244,8 @@
     (with-current-buffer buf
       (save-excursion
         (goto-char (point-min))
-        (dired-next-line 2)
+        (while (dired-get-filename 'no-dir t)
+          (dired-next-line 1))
         (while (not (eobp))
           (let ((filename (dired-get-filename nil t)))
             (when (and filename (not (string-match-p "/\\.?\\.\\'" filename)))
@@ -299,7 +300,8 @@
 (defun dired-k--highlight-by-file-attribyte ()
   (save-excursion
     (goto-char (point-min))
-    (dired-next-line 2)
+    (while (dired-get-filename 'no-dir t)
+      (dired-next-line 1))
     (while (not (eobp))
       (let* ((file-attrs (file-attributes (dired-get-filename nil t)))
              (modified-time (nth 5 file-attrs))
