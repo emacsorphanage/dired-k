@@ -195,7 +195,7 @@
                  (kill-buffer proc-buf))))))))))
 
 (defsubst dired-k--root-directory ()
-  (locate-dominating-file default-directory ".git/"))
+  (locate-dominating-file default-directory ".git"))
 
 (defsubst dired-k--git-style-char (stat)
   (cl-case stat
